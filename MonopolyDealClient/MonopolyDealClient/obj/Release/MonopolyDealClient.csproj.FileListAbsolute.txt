@@ -28,3 +28,5 @@ C:\Users\Eric\Documents\GitHub\Test-Connection\MonopolyDealClient\MonopolyDealCl
 C:\Users\Eric\Documents\GitHub\Test-Connection\MonopolyDealClient\MonopolyDealClient\bin\Release\Newtonsoft.Json.dll
 C:\Users\Eric\Documents\GitHub\Test-Connection\MonopolyDealClient\MonopolyDealClient\bin\Release\Newtonsoft.Json.pdb
 C:\Users\Eric\Documents\GitHub\Test-Connection\MonopolyDealClient\MonopolyDealClient\bin\Release\Newtonsoft.Json.xml
+C:\Users\Eric\Documents\GitHub\iMonopolyDeal\MonopolyDealClient\MonopolyDealClient\obj\Release\MonopolyDealClient.exe
+C:\Users\Eric\Documents\GitHub\iMonopolyDeal\MonopolyDealClient\MonopolyDealClient\obj\Release\MonopolyDealClient.pdb
