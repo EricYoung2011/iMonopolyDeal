@@ -55,6 +55,8 @@ namespace MonopolyDealServer
         public bool _beginGame;
         [DataMember(Name = "UpdateCards", EmitDefaultValue = false)]
         public bool _updateCards;
+        [DataMember(Name = "Message Number", EmitDefaultValue = false)]
+        public int _messageNumber;
        
         public gameState(int _recipient,int stage = 1)
         {
@@ -66,6 +68,7 @@ namespace MonopolyDealServer
                 _numOfPlayersConnected = MainWindow.numOfPlayersConnected;
                 _playerNames = MainWindow.playerNames;
                 _beginGame = MainWindow.beginGame;
+                //_messageNumber = MainWindow.messageNum[_recipient];
             }
             else
             {
@@ -87,6 +90,7 @@ namespace MonopolyDealServer
                 _playerNum = MainWindow.playerNum;
                 _playNum = MainWindow.playNum;
                 _updateCards = MainWindow.updateCards;
+                _messageNumber = MainWindow.messageNum[_recipient];
             }
         }
     }

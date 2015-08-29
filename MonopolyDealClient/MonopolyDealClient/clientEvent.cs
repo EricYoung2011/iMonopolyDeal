@@ -42,6 +42,8 @@ namespace MonopolyDealClient
         public List<Card> _tableMoneySelectedItems = new List<Card>();
         [DataMember(Name = "Player Clicked", EmitDefaultValue = false)]
         public int _playerClicked;
+        [DataMember(Name = "Message Number", EmitDefaultValue = false)]
+        public int _messageNumber;
         //[DataMember(Name = "PlayerHand", EmitDefaultValue = false)]
         //public System.Windows.Controls.ListBox _playerHand;
 
@@ -70,7 +72,7 @@ namespace MonopolyDealClient
             }
             _playerClicked = MainWindow.playerClicked;
             _otherPropertiesSelectedIndex = MainWindow.otherPropertiesSelectedIndex;
-            
+            _messageNumber = MainWindow.messageNum;
 
 
 

@@ -150,6 +150,9 @@ namespace MonopolyDealClient
         public static int otherPropertiesDoubleClicked = 0;
         public static int playerClicked;
         public static int otherPropertiesSelectedIndex;
+        public static int messageNum = 1;
+        public static DateTime lastSend;
+        public static bool eventHappened;
 
 
         System.Timers.Timer aTimer = new System.Timers.Timer(100);
@@ -200,7 +203,7 @@ namespace MonopolyDealClient
                 storage = client.pollAndReceiveData(client.Server, 2);
                 if (storage.Count() > 2)
                 {
-                    sendAcknowledgement();
+                    //sendAcknowledgement();
                     string tempString = GetString(storage);
                     currGameState = Newtonsoft.Json.JsonConvert.DeserializeObject<gameState>(tempString);
                     serverPort = currGameState._serverPort;
@@ -232,7 +235,7 @@ namespace MonopolyDealClient
                 storage = client.pollAndReceiveData(client.Server, 2);
                 if (storage.Count() > 2)
                 {
-                    sendAcknowledgement();
+                    //sendAcknowledgement();
                     string tempString = GetString(storage);
                     currGameState = Newtonsoft.Json.JsonConvert.DeserializeObject<gameState>(tempString);
                     numOfPlayersConnected = currGameState._numOfPlayersConnected;
@@ -250,7 +253,7 @@ namespace MonopolyDealClient
                 storage = client.pollAndReceiveData(client.Server, 2);
                 if (storage.Count() > 2)
                 {
-                    sendAcknowledgement();
+                    //sendAcknowledgement();
                     string tempString = GetString(storage);
                     currGameState = Newtonsoft.Json.JsonConvert.DeserializeObject<gameState>(tempString);
                     AllHands = currGameState._AllHands;
@@ -280,27 +283,42 @@ namespace MonopolyDealClient
                 storage = client.pollAndReceiveData(client.Server, 2);
                 if (storage.Count() > 2)
                 {
-                    sendAcknowledgement();
+                    //sendAcknowledgement();
                     string tempString = GetString(storage);
                     currGameState = Newtonsoft.Json.JsonConvert.DeserializeObject<gameState>(tempString);
-                    AllHands = currGameState._AllHands;
-                    AllTableMoney = currGameState._AllTableMoney;
-                    AllTableProperties = currGameState._AllTableProperties;
-                    myDisplay.button1.Content = currGameState._button1Text;
-                    myDisplay.button1.Visibility = currGameState._button1Visibility;
-                    myDisplay.button2.Content = currGameState._button2Text;
-                    myDisplay.button2.Visibility = currGameState._button2Visibility;
-                    myDisplay.button3.Content = currGameState._button3Text;
-                    myDisplay.button3.Visibility = currGameState._button3Visibility;
-                    myDisplay.buttonBack.Content = currGameState._buttonBackText;
-                    myDisplay.buttonBack.Visibility = currGameState._buttonBackVisibility;
-                    myDisplay.Prompt.Content = currGameState._individualPrompt;
-                    myDisplay.universalPrompt.Text += currGameState._newUniversalPrompt;
-                    numCardsInDeck = currGameState._numCardsInDeck;
-                    playNum = currGameState._playNum;
-                    playerNum = currGameState._playerNum;
-                    playerNames = currGameState._playerNames;
-                    showTable(currGameState._updateCards);
+                    if (currGameState._messageNumber > messageNum)
+                    {
+                        messageNum = currGameState._messageNumber;
+                        eventHappened = false;
+                        clearEvents();
+                        AllHands = currGameState._AllHands;
+                        AllTableMoney = currGameState._AllTableMoney;
+                        AllTableProperties = currGameState._AllTableProperties;
+                        myDisplay.button1.Content = currGameState._button1Text;
+                        myDisplay.button1.Visibility = currGameState._button1Visibility;
+                        myDisplay.button2.Content = currGameState._button2Text;
+                        myDisplay.button2.Visibility = currGameState._button2Visibility;
+                        myDisplay.button3.Content = currGameState._button3Text;
+                        myDisplay.button3.Visibility = currGameState._button3Visibility;
+                        myDisplay.buttonBack.Content = currGameState._buttonBackText;
+                        myDisplay.buttonBack.Visibility = currGameState._buttonBackVisibility;
+                        myDisplay.Prompt.Content = currGameState._individualPrompt;
+                        myDisplay.universalPrompt.Text = currGameState._newUniversalPrompt;
+                        numCardsInDeck = currGameState._numCardsInDeck;
+                        playNum = currGameState._playNum;
+                        playerNum = currGameState._playerNum;
+                        playerNames = currGameState._playerNames;
+                        showTable(currGameState._updateCards);
+                    }
+                    else if(eventHappened)
+                    {
+                        TimeSpan duration = DateTime.Now - lastSend;
+                        if (duration.Milliseconds > 1000)
+                        {
+                            resendClientEvent();
+                            lastSend = DateTime.Now;
+                        }
+                    }
                 }
             }
             aTimer.Enabled = true;
@@ -766,6 +784,7 @@ namespace MonopolyDealClient
             myDisplay.Hand.Visibility = System.Windows.Visibility.Visible;
             myDisplay.Table_Properties.Visibility = System.Windows.Visibility.Visible;
             myDisplay.Table_Money.Visibility = System.Windows.Visibility.Visible;
+            myDisplay.Visibility = System.Windows.Visibility.Visible;
             foreach (Button playerName in otherNames)
             {
                 playerName.Visibility = System.Windows.Visibility.Visible;
@@ -789,6 +808,7 @@ namespace MonopolyDealClient
 
         public void disableTable()
         {
+            myDisplay.Visibility = System.Windows.Visibility.Hidden;
             myDisplay.button1.Visibility = System.Windows.Visibility.Hidden;
             myDisplay.button2.Visibility = System.Windows.Visibility.Hidden;
             myDisplay.button3.Visibility = System.Windows.Visibility.Hidden;
@@ -835,48 +855,61 @@ namespace MonopolyDealClient
         {
             //Hide all buttons
             disableTable();
+            messageNum++;
             currClientEvent = new clientEvent();
             string tempString = Newtonsoft.Json.JsonConvert.SerializeObject(currClientEvent);
             byte[] toSend = GetBytes(tempString.ToString());
             client.sendData(toSend);
-            waitForAcknowledgement();
+            lastSend = DateTime.Now;
+            eventHappened = true;
+            //waitForAcknowledgement();
         }
 
-        public void sendAcknowledgement()
+        public void resendClientEvent()
         {
-            string tempString = "Ack";
+            //Hide all buttons
+            string tempString = Newtonsoft.Json.JsonConvert.SerializeObject(currClientEvent);
             byte[] toSend = GetBytes(tempString.ToString());
             client.sendData(toSend);
+            lastSend = DateTime.Now;
+            //waitForAcknowledgement();
         }
 
-        public void waitForAcknowledgement()
-        {
-            bool wait = true;
-            DateTime start = DateTime.Now;
-            while (wait)
-            {
-                byte[] storage = null;
-                storage = client.pollAndReceiveData(client.Server, 2);
-                if (storage.Count() > 2)
-                {
-                    string tempString = GetString(storage);
-                    if (tempString == "Ack")
-                    {
-                        wait = false;
-                        clearEvents();
-                    }
-                }
-                else
-                {
-                    TimeSpan duration = DateTime.Now - start;
-                    if (duration.TotalMilliseconds > 1000)
-                    {
-                        sendClientEvent();
-                        break;
-                    }
-                }
-            }
-        }
+        //public void sendAcknowledgement()
+        //{
+        //    string tempString = "Ack";
+        //    byte[] toSend = GetBytes(tempString.ToString());
+        //    client.sendData(toSend);
+        //}
+
+        //public void waitForAcknowledgement()
+        //{
+        //    bool wait = true;
+        //    DateTime start = DateTime.Now;
+        //    while (wait)
+        //    {
+        //        byte[] storage = null;
+        //        storage = client.pollAndReceiveData(client.Server, 2);
+        //        if (storage.Count() > 2)
+        //        {
+        //            string tempString = GetString(storage);
+        //            if (tempString == "Ack")
+        //            {
+        //                wait = false;
+        //                clearEvents();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            TimeSpan duration = DateTime.Now - start;
+        //            if (duration.TotalMilliseconds > 1000)
+        //            {
+        //                sendClientEvent();
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
 
         #region Events
         public void clearEvents()

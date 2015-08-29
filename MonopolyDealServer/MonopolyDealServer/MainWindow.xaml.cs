@@ -175,6 +175,9 @@ namespace MonopolyDealServer
         public static int playerClicked;
         public static List<Card> tablePropertiesSelectedItems;
         public static List<Card> tableMoneySelectedItems;
+        public static List<int> messageNum = new List<int>();
+        public static gameState currGameState;
+        DateTime lastSend;
         public enum turnStage
         {
             begin,
@@ -419,11 +422,30 @@ namespace MonopolyDealServer
             storage = servers[clientNumber].pollAndReceiveData(servers[clientNumber].Client, 2);
             if (storage.Count() > 2)
             {
-                sendAcknowledgement(clientNumber);
                 string tempString = GetString(storage);
-                currClientEvent = Newtonsoft.Json.JsonConvert.DeserializeObject<clientEvent>(tempString);
+                getMessage(clientNumber, tempString);
+            }
+            else //no new message received
+            {
+                TimeSpan duration = DateTime.Now - lastSend;
+                if (duration.Milliseconds > 1000)
+                {
+                    resendGameStates();
+                    lastSend = DateTime.Now;
+                }
+            }
+
+        }
+
+        public void getMessage(int clientNumber, string tempString)
+        {
+            //sendAcknowledgement(clientNumber);
+            currClientEvent = Newtonsoft.Json.JsonConvert.DeserializeObject<clientEvent>(tempString);
+            if (currClientEvent._messageNumber > messageNum[clientNumber])
+            {
+                messageNum[clientNumber] = currClientEvent._messageNumber;
                 updateCards = true;
-                if (currClientEvent._button1Clicked==1)
+                if (currClientEvent._button1Clicked == 1)
                 {
                     playerTurns[clientNumber].button1_Click();
                 }
@@ -476,60 +498,80 @@ namespace MonopolyDealServer
                     OtherPlayer_Properties_MouseDoubleClick();
                 }
                 sendGameStates();
+                lastSend = DateTime.Now;
             }
-
         }
 
+        //Also updates gameStates
         public static void sendGameStates(bool getAcknowledge = true,int stage = 1)
         {
             for (int clientNum = 0; clientNum < servers.Count; clientNum++)
             {
-                gameState currGameState = new gameState(clientNum, stage);
+                if (stage == 1)
+                {
+                    messageNum[clientNum]++;
+                }
+                currGameState = new gameState(clientNum, stage);
                 string tempString = Newtonsoft.Json.JsonConvert.SerializeObject(currGameState);
                 byte[] toSend = GetBytes(tempString.ToString());
                 servers[clientNum].sendData(servers[clientNum].Client, toSend);
-                if (getAcknowledge)
-                {
-                    waitForAcknowledgement(clientNum);
-                }
+                //if (getAcknowledge)
+                //{
+                //    waitForAcknowledgement(clientNum);
+                //}
             }
-            newUniversalPrompt = "";
+            //newUniversalPrompt = "";
         }
 
-        public void sendAcknowledgement(int clientNum)
+        public static void resendGameStates(bool getAcknowledge = true, int stage = 1)
         {
-            string tempString = "Ack";
-            byte[] toSend = GetBytes(tempString.ToString());
-            servers[clientNum].sendData(servers[clientNum].Client, toSend);
-        }
-
-        public static void waitForAcknowledgement(int clientNum)
-        {
-            bool wait = true;
-            DateTime start = DateTime.Now;
-            while (wait)
+            for (int clientNum = 0; clientNum < servers.Count; clientNum++)
             {
-                byte[] storage = null;
-                storage = servers[clientNum].pollAndReceiveData(servers[clientNum].Client, 2);
-                if (storage.Count() > 2)
-                {
-                    string tempString = GetString(storage);
-                    if (tempString == "Ack")
-                    {
-                        wait = false;
-                    }
-                }
-                else
-                {
-                    TimeSpan duration = DateTime.Now - start;
-                    if (duration.TotalMilliseconds > 1000)
-                    {
-                        sendGameStates();
-                        break;
-                    }
-                }
+                string tempString = Newtonsoft.Json.JsonConvert.SerializeObject(currGameState);
+                byte[] toSend = GetBytes(tempString.ToString());
+                servers[clientNum].sendData(servers[clientNum].Client, toSend);
+                //if (getAcknowledge)
+                //{
+                //    waitForAcknowledgement(clientNum);
+                //}
             }
+            //newUniversalPrompt = "";
         }
+
+        //public void sendAcknowledgement(int clientNum)
+        //{
+        //    string tempString = "Ack";
+        //    byte[] toSend = GetBytes(tempString.ToString());
+        //    servers[clientNum].sendData(servers[clientNum].Client, toSend);
+        //}
+
+        //public static void waitForAcknowledgement(int clientNum)
+        //{
+        //    bool wait = true;
+        //    DateTime start = DateTime.Now;
+        //    while (wait)
+        //    {
+        //        byte[] storage = null;
+        //        storage = servers[clientNum].pollAndReceiveData(servers[clientNum].Client, 2);
+        //        if (storage.Count() > 2)
+        //        {
+        //            string tempString = GetString(storage);
+        //            if (tempString == "Ack")
+        //            {
+        //                wait = false;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            TimeSpan duration = DateTime.Now - start;
+        //            if (duration.TotalMilliseconds > 1000)
+        //            {
+        //                sendGameStates();
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
 
         static byte[] GetBytes(string str)
         {
@@ -584,6 +626,7 @@ namespace MonopolyDealServer
                 otherCardsLeftText.Add(new List<TextBox>());
                 otherTurnsLeft.Add(new List<TextBox>());
                 otherTurnsLeftText.Add(new List<TextBox>());
+                messageNum.Add(0);
 
                 for (int j = 0; j < (numOfPlayers); j++)
                 {
