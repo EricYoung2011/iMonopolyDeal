@@ -188,12 +188,16 @@ namespace SocketDLL
         /// <returns>returns error code, if any</returns>
         public byte[] receiveData(Socket clientSocket)
         {
-            byte[] buffer = new byte[2000];
+            byte[] buffer = new byte[100000];
             byte[] example = new byte[1];
             int iResult = 0;
             try
             {
                 iResult = clientSocket.Receive(buffer);
+                if (buffer[20000] != 0)
+                {
+                    int stop = 1;
+                }
                 int stillSorting = 0;
                 while (stillSorting>=0)
                 {

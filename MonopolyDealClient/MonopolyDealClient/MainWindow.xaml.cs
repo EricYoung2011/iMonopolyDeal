@@ -95,6 +95,43 @@ namespace MonopolyDealClient
         Error
     }
 
+    public enum turnStage
+    {
+        begin,
+        ready,
+        decidePlayType,
+        moveCards,
+        moveCardsDecideType,
+        moveCardsDecideTypeWild,
+        checkMoveCard,
+        playCardFromeHand,
+        decideCardType,
+        decidePropertyType,
+        decidePropertyTypeWild,
+        checkPlayCard,
+        discard,
+        checkDiscard,
+        house,
+        checkHouse,
+        hotel,
+        checkHotel,
+        debtCollect,
+        birthday,
+        forcedDeal1,
+        forcedDeal2,
+        receiveForcedDeal,
+        slyDeal,
+        dealBreaker,
+        rentWild,
+        rentWild2,
+        rent,
+        doubleRent,
+        doubleRentWild,
+        checkRent,
+        acknowledgeAttack1,
+        acknowledgeAttack2,
+    }
+
     public enum PropertyType
     {
         Normal,
@@ -153,6 +190,8 @@ namespace MonopolyDealClient
         public static int messageNum = 1;
         public static DateTime lastSend;
         public static bool eventHappened;
+        public static bool allowEvents = true;
+        public static turnStage stage;
 
 
         System.Timers.Timer aTimer = new System.Timers.Timer(100);
@@ -308,12 +347,37 @@ namespace MonopolyDealClient
                         playNum = currGameState._playNum;
                         playerNum = currGameState._playerNum;
                         playerNames = currGameState._playerNames;
+                        string bob = currGameState._stage;
+                        stage = currGameState._turnStage;
+                        //Other player needs to choose cards
+                        if ((stage == turnStage.acknowledgeAttack1) || (stage == turnStage.acknowledgeAttack2))
+                        {
+                            if (playerNum == myPlayerNum)
+                            {
+                                allowEvents = false;
+                            }
+                            else
+                            {
+                                allowEvents = true;
+                            }
+                        }
+                        else //Playernum needs to choose cards
+                        {
+                            if (playerNum == myPlayerNum)
+                            {
+                                allowEvents = true;
+                            }
+                            else
+                            {
+                                allowEvents = false;
+                            }
+                        }
                         showTable(currGameState._updateCards);
                     }
                     else if(eventHappened)
                     {
                         TimeSpan duration = DateTime.Now - lastSend;
-                        if (duration.Milliseconds > 1000)
+                        if (duration.Milliseconds > 5000)
                         {
                             resendClientEvent();
                             lastSend = DateTime.Now;
@@ -806,24 +870,25 @@ namespace MonopolyDealClient
             //}
         }
 
-        public void disableTable()
+        public void disableEvents()
         {
-            myDisplay.Visibility = System.Windows.Visibility.Hidden;
+            //myDisplay.Visibility = System.Windows.Visibility.Hidden;
+            allowEvents = false;
             myDisplay.button1.Visibility = System.Windows.Visibility.Hidden;
             myDisplay.button2.Visibility = System.Windows.Visibility.Hidden;
             myDisplay.button3.Visibility = System.Windows.Visibility.Hidden;
             myDisplay.buttonBack.Visibility = System.Windows.Visibility.Hidden;
-            myDisplay.Hand.Visibility = System.Windows.Visibility.Hidden;
-            myDisplay.Table_Money.Visibility = System.Windows.Visibility.Hidden;
-            myDisplay.Table_Properties.Visibility = System.Windows.Visibility.Hidden;
-            foreach (Button playerName in otherNames)
-            {
-                playerName.Visibility = System.Windows.Visibility.Hidden;
-            }
-            foreach (ListBox otherProps in otherTable_Properties)
-            {
-                otherProps.Visibility = System.Windows.Visibility.Hidden;
-            }
+            //myDisplay.Hand.Visibility = System.Windows.Visibility.Hidden;
+            //myDisplay.Table_Money.Visibility = System.Windows.Visibility.Hidden;
+            //myDisplay.Table_Properties.Visibility = System.Windows.Visibility.Hidden;
+            //foreach (Button playerName in otherNames)
+            //{
+            //    playerName.Visibility = System.Windows.Visibility.Hidden;
+            //}
+            //foreach (ListBox otherProps in otherTable_Properties)
+            //{
+            //    otherProps.Visibility = System.Windows.Visibility.Hidden;
+            //}
             //myDisplay.Hand.IsEnabled = false;
             //myDisplay.Table_Properties.IsEnabled = false;
             //myDisplay.Table_Money.IsEnabled = false;
@@ -854,7 +919,7 @@ namespace MonopolyDealClient
         public void sendClientEvent()
         {
             //Hide all buttons
-            disableTable();
+            disableEvents();
             messageNum++;
             currClientEvent = new clientEvent();
             string tempString = Newtonsoft.Json.JsonConvert.SerializeObject(currClientEvent);
@@ -937,38 +1002,57 @@ namespace MonopolyDealClient
 
         public void button1_Click(object sender, RoutedEventArgs e)
         {
-            button1Clicked = 1;
-            sendClientEvent();
+            //Not needed, because the button will only appear if events ARE allowed
+            //if (allowEvents)
+            //{
+                button1Clicked = 1;
+                sendClientEvent();
+            //}
         }
 
         public void button2_Click(object sender, RoutedEventArgs e)
         {
-            button2Clicked = 1;
-            sendClientEvent();
+            //if (allowEvents)
+            //{
+                button2Clicked = 1;
+                sendClientEvent();
+            //}
         }
 
         public void button3_Click(object sender, RoutedEventArgs e)
         {
-            button3Clicked = 1;
-            sendClientEvent();
+            //if (allowEvents)
+            //{
+                button3Clicked = 1;
+                sendClientEvent();
+            //}
         }
 
         public void buttonBack_Click(object sender, RoutedEventArgs e)
         {
-            buttonBackClicked = 1;
-            sendClientEvent();
+            //if (allowEvents)
+            //{
+                buttonBackClicked = 1;
+                sendClientEvent();
+            //}
         }
 
         public void Table_Properties_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            propertiesSelectionChanged = 1;
-            sendClientEvent();
+            if (allowEvents)
+            {
+                propertiesSelectionChanged = 1;
+                sendClientEvent();
+            }
         }
 
         public void Table_Money_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            moneySelectionChanged = 1;
-            sendClientEvent();
+            if (allowEvents)
+            {
+                moneySelectionChanged = 1;
+                sendClientEvent();
+            }
         }
 
         //public void Table_Properties_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -979,25 +1063,34 @@ namespace MonopolyDealClient
 
         public void Hand_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            handDoubleClicked = 1;
-            sendClientEvent();
+            if (allowEvents)
+            {
+                handDoubleClicked = 1;
+                sendClientEvent();
+            }
         }
 
         public void OtherPlayer_Click(object sender, RoutedEventArgs e)
         {
-            otherPlayerClicked = 1;
-            Button copySender = (Button)sender;
-            playerClicked = MainWindow.otherNames.IndexOf(copySender);
-            sendClientEvent();
+            if (allowEvents)
+            {
+                otherPlayerClicked = 1;
+                Button copySender = (Button)sender;
+                playerClicked = MainWindow.otherNames.IndexOf(copySender);
+                sendClientEvent();
+            }
         }
 
         public void OtherPlayer_Properties_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            otherPropertiesDoubleClicked = 1;
-            ListBox copySender = (ListBox)sender;
-            playerClicked = MainWindow.otherTable_Properties.IndexOf(copySender);
-            otherPropertiesSelectedIndex = MainWindow.otherTable_Properties[playerClicked].SelectedIndex;
-            sendClientEvent();
+            if (allowEvents)
+            {
+                otherPropertiesDoubleClicked = 1;
+                ListBox copySender = (ListBox)sender;
+                playerClicked = MainWindow.otherTable_Properties.IndexOf(copySender);
+                otherPropertiesSelectedIndex = MainWindow.otherTable_Properties[playerClicked].SelectedIndex;
+                sendClientEvent();
+            }
         }
 
         public void window_SizeChanged(object sender, SizeChangedEventArgs e)

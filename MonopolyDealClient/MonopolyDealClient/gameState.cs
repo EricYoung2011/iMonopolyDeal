@@ -57,6 +57,10 @@ namespace MonopolyDealClient
         public bool _updateCards;
         [DataMember(Name = "Message Number", EmitDefaultValue = false)]
         public int _messageNumber;
+        [DataMember(Name = "StageString", EmitDefaultValue = false)]
+        public string _stage;
+        [DataMember(Name = "TurnStage", EmitDefaultValue = false)]
+        public turnStage _turnStage;
 
         public gameState(int _recipient, int stage = 1)
         {

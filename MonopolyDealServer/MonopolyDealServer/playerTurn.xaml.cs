@@ -34,7 +34,7 @@ namespace MonopolyDealServer
         public void beginTurn(int player)
         {
             MainWindow.playNum = 0;
-            MainWindow.stage = MainWindow.turnStage.begin;
+            MainWindow.stage = turnStage.begin;
             setupEvents(player);
             updateUniversalPrompt(MainWindow.playerNames[player] + " began his turn");
             if (MainWindow.AllHands[MainWindow.playerNum].Count > 0)
@@ -198,7 +198,7 @@ namespace MonopolyDealServer
                 //MainWindow.playerTurns[i].Table_Money.IsEnabled = false;
                 //MainWindow.playerTurns[i].Table_Properties.IsEnabled = false;
             }
-            MainWindow.stage = MainWindow.turnStage.decidePlayType;
+            MainWindow.stage = turnStage.decidePlayType;
             MainWindow.doublePlayed = false;
             MainWindow.doublePlayed2 = false;
             Prompt.Content = MainWindow.playerNames[MainWindow.playerNum] + ", what would you like to do?";
@@ -224,7 +224,7 @@ namespace MonopolyDealServer
 
         public void playCardFromHand()
         {
-            MainWindow.stage = MainWindow.turnStage.playCardFromeHand;
+            MainWindow.stage = turnStage.playCardFromeHand;
             //Hand.IsEnabled = true;
             Prompt.Content = "Which card would you like to play?";
             button1.Visibility = System.Windows.Visibility.Hidden;
@@ -239,7 +239,7 @@ namespace MonopolyDealServer
         {
             //Hand.IsEnabled = false;
             Prompt.Content = "Play card as...";
-            MainWindow.stage = MainWindow.turnStage.decideCardType;
+            MainWindow.stage = turnStage.decideCardType;
             MainWindow.cardType = MainWindow.getCardType(MainWindow.AllHands[MainWindow.playerNum][MainWindow.cardNum]);
             switch (MainWindow.cardType)
             {
@@ -385,7 +385,7 @@ namespace MonopolyDealServer
         //Playing card as property
         public void decidePropertyType()
         {
-            MainWindow.stage = MainWindow.turnStage.decidePropertyType;
+            MainWindow.stage = turnStage.decidePropertyType;
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
             button3.Visibility = System.Windows.Visibility.Hidden;
@@ -484,7 +484,7 @@ namespace MonopolyDealServer
 
         public void decidePropertyTypeWild()
         {
-            MainWindow.stage = MainWindow.turnStage.decidePropertyTypeWild;
+            MainWindow.stage = turnStage.decidePropertyTypeWild;
             button1.Content = "Play as Wild";
             button1.Visibility = System.Windows.Visibility.Visible;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -516,11 +516,11 @@ namespace MonopolyDealServer
         //Check all plays from hand
         public void checkPlayCard()
         {
-            if (MainWindow.stage != MainWindow.turnStage.decidePropertyTypeWild)
+            if (MainWindow.stage != turnStage.decidePropertyTypeWild)
             {
                 MainWindow.propIndex = MainWindow.getPropertyIndex(MainWindow.propertyCard);
             }
-            if ((MainWindow.stage == MainWindow.turnStage.decidePropertyType) || (MainWindow.stage == MainWindow.turnStage.decidePropertyTypeWild))
+            if ((MainWindow.stage == turnStage.decidePropertyType) || (MainWindow.stage == turnStage.decidePropertyTypeWild))
             {
                 string color = "";
                 switch (MainWindow.propIndex)
@@ -572,14 +572,14 @@ namespace MonopolyDealServer
             button2.Visibility = System.Windows.Visibility.Visible;
             button3.Visibility = System.Windows.Visibility.Hidden;
             buttonBack.Visibility = System.Windows.Visibility.Visible;
-            MainWindow.stage = MainWindow.turnStage.checkPlayCard;
+            MainWindow.stage = turnStage.checkPlayCard;
             //MainWindow.sendGameStates();
         }
 
         //Moving cards on table
         public void moveCards()
         {
-            MainWindow.stage = MainWindow.turnStage.moveCards;
+            MainWindow.stage = turnStage.moveCards;
             Prompt.Content = "Select card to move.";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -602,7 +602,7 @@ namespace MonopolyDealServer
             }
             else
             {
-                MainWindow.stage = MainWindow.turnStage.moveCardsDecideType;
+                MainWindow.stage = turnStage.moveCardsDecideType;
                 button1.Visibility = System.Windows.Visibility.Hidden;
                 button2.Visibility = System.Windows.Visibility.Hidden;
                 button3.Visibility = System.Windows.Visibility.Hidden;
@@ -683,7 +683,7 @@ namespace MonopolyDealServer
             }
             else
             {
-                MainWindow.stage = MainWindow.turnStage.moveCardsDecideTypeWild;
+                MainWindow.stage = turnStage.moveCardsDecideTypeWild;
                 button1.Content = "Play as Wild";
                 button1.Visibility = System.Windows.Visibility.Visible;
                 button2.Visibility = System.Windows.Visibility.Hidden;
@@ -698,9 +698,9 @@ namespace MonopolyDealServer
 
         public void checkMoveCard()
         {
-            //if ((MainWindow.stage == MainWindow.turnStage.moveCardsDecideType) || (MainWindow.stage == MainWindow.turnStage.moveCardsDecideTypeWild))
+            //if ((MainWindow.stage == turnStage.moveCardsDecideType) || (MainWindow.stage == turnStage.moveCardsDecideTypeWild))
             //{
-            MainWindow.stage = MainWindow.turnStage.checkMoveCard;
+            MainWindow.stage = turnStage.checkMoveCard;
             string color = "";
             switch (MainWindow.propIndex2)
             {
@@ -806,7 +806,7 @@ namespace MonopolyDealServer
         //End turn
         public void discard()
         {
-            MainWindow.stage = MainWindow.turnStage.discard;
+            MainWindow.stage = turnStage.discard;
             //Hand.IsEnabled = true;
             Prompt.Content = "Choose a card to discard";
             button1.Visibility = System.Windows.Visibility.Hidden;
@@ -825,7 +825,7 @@ namespace MonopolyDealServer
 
         public void checkDiscard()
         {
-            MainWindow.stage = MainWindow.turnStage.checkDiscard;
+            MainWindow.stage = turnStage.checkDiscard;
             //Hand.IsEnabled = false;
             Prompt.Content = "Discard " + MainWindow.AllHands[MainWindow.playerNum][MainWindow.cardNum] + " as " + MainWindow.cardType + "?";
             button1.Content = "Yes";
@@ -885,7 +885,7 @@ namespace MonopolyDealServer
             //MainWindow.playerTurns[MainWindow.playerNum].window.BringIntoView();
             //MainWindow.playerTurns[MainWindow.playerNum].window.Focus();
             //MainWindow.playerTurns[MainWindow.playerNum].window.Show();
-            MainWindow.stage = MainWindow.turnStage.ready;
+            MainWindow.stage = turnStage.ready;
             //for (int i = 0; i < MainWindow.playerNum; i++)
             //{
             //    MainWindow.playerTurns[i].Hand.Visibility = System.Windows.Visibility.Hidden;
@@ -901,7 +901,7 @@ namespace MonopolyDealServer
         //House
         public void playHouse()
         {
-            MainWindow.stage = MainWindow.turnStage.house;
+            MainWindow.stage = turnStage.house;
             int numOfOptions = MainWindow.numOfHouseOptions();
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1012,7 +1012,7 @@ namespace MonopolyDealServer
 
         public void checkHouse()
         {
-            MainWindow.stage = MainWindow.turnStage.checkHouse;
+            MainWindow.stage = turnStage.checkHouse;
             string color = " ";
             switch (MainWindow.propIndex)
             {
@@ -1070,7 +1070,7 @@ namespace MonopolyDealServer
         //House
         public void playHotel()
         {
-            MainWindow.stage = MainWindow.turnStage.hotel;
+            MainWindow.stage = turnStage.hotel;
             int numOfOptions = MainWindow.numOfHotelOptions();
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1181,7 +1181,7 @@ namespace MonopolyDealServer
 
         public void checkHotel()
         {
-            MainWindow.stage = MainWindow.turnStage.checkHotel;
+            MainWindow.stage = turnStage.checkHotel;
             string color = " ";
             switch (MainWindow.propIndex)
             {
@@ -1239,7 +1239,7 @@ namespace MonopolyDealServer
         //Birthday
         public void checkBirthday()
         {
-            MainWindow.stage = MainWindow.turnStage.birthday;
+            MainWindow.stage = turnStage.birthday;
             Prompt.Content = "Play 'It's My Birthday'? ";
             button1.Content = "Yes";
             button1.Visibility = System.Windows.Visibility.Visible;
@@ -1290,7 +1290,7 @@ namespace MonopolyDealServer
         //Debt Collect
         public void playDebtCollector()
         {
-            MainWindow.stage = MainWindow.turnStage.debtCollect;
+            MainWindow.stage = turnStage.debtCollect;
             Prompt.Content = "Choose a player to Debt Collect.";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1329,7 +1329,7 @@ namespace MonopolyDealServer
         //Rent
         public void playRentWild()
         {
-            MainWindow.stage = MainWindow.turnStage.rentWild;
+            MainWindow.stage = turnStage.rentWild;
             Prompt.Content = "Choose a property to rent.";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1342,7 +1342,7 @@ namespace MonopolyDealServer
 
         public void playRentWild2()
         {
-            MainWindow.stage = MainWindow.turnStage.rentWild2;
+            MainWindow.stage = turnStage.rentWild2;
             Prompt.Content = "Choose a player to charge $" + MainWindow.payment + " rent.";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1398,7 +1398,7 @@ namespace MonopolyDealServer
 
         public void playRent()
         {
-            MainWindow.stage = MainWindow.turnStage.rent;
+            MainWindow.stage = turnStage.rent;
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
             button3.Visibility = System.Windows.Visibility.Hidden;
@@ -1511,7 +1511,7 @@ namespace MonopolyDealServer
 
         public void checkRent()
         {
-            MainWindow.stage = MainWindow.turnStage.checkRent;
+            MainWindow.stage = turnStage.checkRent;
             //MainWindow.payment = MainWindow.getRentAmount();
             Prompt.Content = "Charge $" + MainWindow.payment + " rent to everyone?";
             button1.Content = "Yes";
@@ -1570,7 +1570,7 @@ namespace MonopolyDealServer
         //DoubleTheRent
         public void askDoubleRentWild()
         {
-            MainWindow.stage = MainWindow.turnStage.doubleRentWild;
+            MainWindow.stage = turnStage.doubleRentWild;
             Prompt.Content = "Would you like to Double the Rent to $" + (MainWindow.payment * 2) + "?";
             button1.Content = "Yes";
             button1.Visibility = System.Windows.Visibility.Visible;
@@ -1583,7 +1583,7 @@ namespace MonopolyDealServer
 
         public void askDoubleRent()
         {
-            MainWindow.stage = MainWindow.turnStage.doubleRent;
+            MainWindow.stage = turnStage.doubleRent;
             Prompt.Content = "Would you like to Double the Rent to $" + (MainWindow.payment * 2) + "?";
             button1.Content = "Yes";
             button1.Visibility = System.Windows.Visibility.Visible;
@@ -1597,7 +1597,7 @@ namespace MonopolyDealServer
         //Forced Deal
         public void playForcedDeal()
         {
-            MainWindow.stage = MainWindow.turnStage.forcedDeal1;
+            MainWindow.stage = turnStage.forcedDeal1;
             Prompt.Content = "Choose a card from your table to trade.";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1610,7 +1610,7 @@ namespace MonopolyDealServer
 
         public void playForcedDeal2()
         {
-            MainWindow.stage = MainWindow.turnStage.forcedDeal2;
+            MainWindow.stage = turnStage.forcedDeal2;
             Prompt.Content = "Choose a card from another player's table to steal.";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1673,7 +1673,7 @@ namespace MonopolyDealServer
         //Sly Deal
         public void playSlyDeal()
         {
-            MainWindow.stage = MainWindow.turnStage.slyDeal;
+            MainWindow.stage = turnStage.slyDeal;
             Prompt.Content = "Choose a card to Sly Deal.";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1736,7 +1736,7 @@ namespace MonopolyDealServer
         //Dealbreaker
         public void playDealBreaker()
         {
-            MainWindow.stage = MainWindow.turnStage.dealBreaker;
+            MainWindow.stage = turnStage.dealBreaker;
             Prompt.Content = "Choose a player to Deal-Break";
             button1.Visibility = System.Windows.Visibility.Hidden;
             button2.Visibility = System.Windows.Visibility.Hidden;
@@ -1878,7 +1878,7 @@ namespace MonopolyDealServer
         //Payments
         public void acknowledgeAttack()
         {
-            MainWindow.stage = MainWindow.turnStage.acknowledgeAttack1;
+            MainWindow.stage = turnStage.acknowledgeAttack1;
             Prompt.Content = MainWindow.playerNames[MainWindow.playerNum] + " is ";
             button1.Visibility = System.Windows.Visibility.Visible;
             button1.Content = "OK";
@@ -1966,7 +1966,7 @@ namespace MonopolyDealServer
 
         public void pay()
         {
-            //MainWindow.stage = MainWindow.turnStage.makingPayment;
+            //MainWindow.stage = turnStage.makingPayment;
             setupEvents(MainWindow.chosenPlayer);
             Prompt.Content = "Select cards totalling $" + MainWindow.payment + " to pay " + MainWindow.playerNames[MainWindow.playerNum];
             button1.Visibility = System.Windows.Visibility.Hidden;
@@ -2083,7 +2083,7 @@ namespace MonopolyDealServer
 
         public void receiveForcedDeal()
         {
-            MainWindow.stage = MainWindow.turnStage.receiveForcedDeal;
+            MainWindow.stage = turnStage.receiveForcedDeal;
             MainWindow.propertyType = MainWindow.getPropertyType(MainWindow.propertyCard);
             if (MainWindow.propertyType == PropertyType.Wild)
             {
@@ -2207,7 +2207,7 @@ namespace MonopolyDealServer
         //    Button copySender = (Button)sender;
         //    int playerClicked = MainWindow.otherNames[MainWindow.playerNum].IndexOf(copySender);
 
-        //    if (MainWindow.stage == MainWindow.turnStage.debtCollect)
+        //    if (MainWindow.stage == turnStage.debtCollect)
         //    {
         //        MainWindow.chosenPlayer = playerClicked;
         //        if (MainWindow.chosenPlayer != MainWindow.playerNum)
@@ -2215,7 +2215,7 @@ namespace MonopolyDealServer
         //            MainWindow.playerTurns[MainWindow.playerNum].checkDebtCollector();
         //        }
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.rentWild2)
+        //    if (MainWindow.stage == turnStage.rentWild2)
         //    {
         //        MainWindow.chosenPlayer = playerClicked;
         //        if (MainWindow.chosenPlayer != MainWindow.playerNum)
@@ -2223,7 +2223,7 @@ namespace MonopolyDealServer
         //            MainWindow.playerTurns[MainWindow.playerNum].checkRentWild();
         //        }
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.dealBreaker)
+        //    if (MainWindow.stage == turnStage.dealBreaker)
         //    {
         //        MainWindow.chosenPlayer = playerClicked;
         //        if (MainWindow.chosenPlayer != MainWindow.playerNum)
@@ -2242,7 +2242,7 @@ namespace MonopolyDealServer
         //    {
         //        return;
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.slyDeal)
+        //    if (MainWindow.stage == turnStage.slyDeal)
         //    {
         //        MainWindow.cardNum = MainWindow.otherTable_Properties[MainWindow.playerNum][playerClicked].SelectedIndex;
         //        MainWindow.propertyCard = MainWindow.otherTable_Properties[MainWindow.playerNum][playerClicked].Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -2256,7 +2256,7 @@ namespace MonopolyDealServer
         //        }
         //    }
 
-        //    //if (MainWindow.stage == MainWindow.turnStage.forcedDeal1)
+        //    //if (MainWindow.stage == turnStage.forcedDeal1)
         //    //{
         //    //    MainWindow.cardNum = Table_Properties.SelectedIndex;
         //    //    Card currentCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -2264,7 +2264,7 @@ namespace MonopolyDealServer
         //    //    MainWindow.cardNum = MainWindow.AllTableProperties[MainWindow.playerNum][MainWindow.propIndex].IndexOf(currentCard);
         //    //    MainWindow.playerTurns[MainWindow.playerNum].playForcedDeal2();
         //    //}
-        //    else if (MainWindow.stage == MainWindow.turnStage.forcedDeal2)
+        //    else if (MainWindow.stage == turnStage.forcedDeal2)
         //    {
         //        MainWindow.cardNum2 = MainWindow.otherTable_Properties[MainWindow.playerNum][playerClicked].SelectedIndex;
         //        MainWindow.propertyCard = MainWindow.otherTable_Properties[MainWindow.playerNum][playerClicked].Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
@@ -2280,28 +2280,28 @@ namespace MonopolyDealServer
         {
             switch (MainWindow.stage)
             {
-                case MainWindow.turnStage.ready:
+                case turnStage.ready:
                     beginTurn(MainWindow.playerNum);
                     return;
 
-                case MainWindow.turnStage.begin:
+                case turnStage.begin:
                     return;
 
-                case MainWindow.turnStage.decidePlayType:
+                case turnStage.decidePlayType:
                     playCardFromHand();
                     return;
 
-                case MainWindow.turnStage.playCardFromeHand:
+                case turnStage.playCardFromeHand:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.decideCardType:
+                case turnStage.decideCardType:
                     MainWindow.cardType = CardType.Action;
                     checkPlayCard();
                     return;
 
                 #region decidePropertyType
-                case MainWindow.turnStage.decidePropertyType:
+                case turnStage.decidePropertyType:
                     switch (MainWindow.propertyCard)
                     {
                         case Card.PropertyBlackGreen__4:
@@ -2364,13 +2364,13 @@ namespace MonopolyDealServer
                     return;
                 #endregion
 
-                case MainWindow.turnStage.decidePropertyTypeWild:
+                case turnStage.decidePropertyTypeWild:
                     MainWindow.propIndex = 10;
                     checkPlayCard();
                     return;
 
                 #region checkPlayCard
-                case MainWindow.turnStage.checkPlayCard:
+                case turnStage.checkPlayCard:
                     switch (MainWindow.cardType)
                     {
                         case CardType.Action:
@@ -2424,7 +2424,7 @@ namespace MonopolyDealServer
                 #endregion
 
                 #region moveCardsDecideType
-                case MainWindow.turnStage.moveCardsDecideType:
+                case turnStage.moveCardsDecideType:
                     switch (MainWindow.propertyCard)
                     {
                         case Card.PropertyBlackGreen__4:
@@ -2487,13 +2487,13 @@ namespace MonopolyDealServer
                     return;
                 #endregion
 
-                case MainWindow.turnStage.moveCardsDecideTypeWild:
+                case turnStage.moveCardsDecideTypeWild:
                     MainWindow.propIndex2 = 10;
                     checkMoveCard();
                     return;
 
                 #region checkMoveCard
-                case MainWindow.turnStage.checkMoveCard:
+                case turnStage.checkMoveCard:
                     if (MainWindow.propertyType == PropertyType.Duo)
                     {
                         switch (MainWindow.propertyCard)
@@ -2585,41 +2585,41 @@ namespace MonopolyDealServer
                     return;
                 #endregion
 
-                case MainWindow.turnStage.discard:
+                case turnStage.discard:
                     return;
 
-                case MainWindow.turnStage.checkDiscard:
+                case turnStage.checkDiscard:
                     discardCard();
                     return;
 
-                case MainWindow.turnStage.house:
+                case turnStage.house:
                     MainWindow.propIndex = MainWindow.monopolyIndex1;
                     checkHouse();
                     return;
 
-                case MainWindow.turnStage.checkHouse:
+                case turnStage.checkHouse:
                     house();
                     return;
 
-                case MainWindow.turnStage.hotel:
+                case turnStage.hotel:
                     MainWindow.propIndex = MainWindow.monopolyIndex1;
                     checkHotel();
                     return;
 
-                case MainWindow.turnStage.checkHotel:
+                case turnStage.checkHotel:
                     hotel();
                     return;
 
-                case MainWindow.turnStage.debtCollect:
+                case turnStage.debtCollect:
                     debtCollect();
                     return;
 
-                case MainWindow.turnStage.rentWild2:
+                case turnStage.rentWild2:
                     rentWild();
                     return;
 
                 #region doubleRentWild
-                case MainWindow.turnStage.doubleRentWild:
+                case turnStage.doubleRentWild:
                     MainWindow.payment = 2 * MainWindow.payment;
                     if (MainWindow.doublePlayed)
                     {
@@ -2639,7 +2639,7 @@ namespace MonopolyDealServer
                 #endregion
 
                 #region doubleRent
-                case MainWindow.turnStage.doubleRent:
+                case turnStage.doubleRent:
                     MainWindow.payment = 2 * MainWindow.payment;
                     if (MainWindow.doublePlayed)
                     {
@@ -2659,7 +2659,7 @@ namespace MonopolyDealServer
                 #endregion
 
                 #region rent
-                case MainWindow.turnStage.rent:
+                case turnStage.rent:
                     switch (MainWindow.rentCard)
                     {
                         case Card.RentBlackUtility__1:
@@ -2694,24 +2694,24 @@ namespace MonopolyDealServer
                     return;
                 #endregion
 
-                case MainWindow.turnStage.checkRent:
+                case turnStage.checkRent:
                     rent();
                     return;
 
-                case MainWindow.turnStage.birthday:
+                case turnStage.birthday:
                     collectBirthday();
                     return;
 
-                case MainWindow.turnStage.slyDeal:
+                case turnStage.slyDeal:
                     slyDeal();
                     return;
 
-                case MainWindow.turnStage.forcedDeal2:
+                case turnStage.forcedDeal2:
                     forcedDeal();
                     return;
 
                 #region receiveForcedDeal
-                case MainWindow.turnStage.receiveForcedDeal:
+                case turnStage.receiveForcedDeal:
                     button1.Visibility = System.Windows.Visibility.Hidden;
                     button2.Visibility = System.Windows.Visibility.Hidden;
                     button3.Visibility = System.Windows.Visibility.Hidden;
@@ -2776,13 +2776,13 @@ namespace MonopolyDealServer
                     }
                 #endregion
 
-                case MainWindow.turnStage.dealBreaker:
+                case turnStage.dealBreaker:
                     MainWindow.propIndex = MainWindow.monopolyIndex1;
                     dealBreak();
                     return;
 
                 #region acknowledgeAttack
-                case MainWindow.turnStage.acknowledgeAttack1:
+                case turnStage.acknowledgeAttack1:
                     string stringPlayer = buttonPlayer.Content.ToString();
                     int player = (stringPlayer[7] - 49);
                     if (player == MainWindow.playerNum)
@@ -2790,7 +2790,7 @@ namespace MonopolyDealServer
                         finishPlayAction();
                         return;
                     }
-                    MainWindow.stage = MainWindow.turnStage.acknowledgeAttack2;
+                    MainWindow.stage = turnStage.acknowledgeAttack2;
                     button1.Visibility = System.Windows.Visibility.Hidden;
                     button2.Visibility = System.Windows.Visibility.Hidden;
                     switch (MainWindow.playedCard)
@@ -2855,23 +2855,23 @@ namespace MonopolyDealServer
         {
             switch (MainWindow.stage)
             {
-                case MainWindow.turnStage.begin:
+                case turnStage.begin:
                     return;
 
-                case MainWindow.turnStage.decidePlayType:
+                case turnStage.decidePlayType:
                     moveCards();
                     return;
 
-                case MainWindow.turnStage.playCardFromeHand:
+                case turnStage.playCardFromeHand:
                     return;
 
-                case MainWindow.turnStage.decideCardType:
+                case turnStage.decideCardType:
                     MainWindow.cardType = CardType.Money;
                     checkPlayCard();
                     return;
 
                 #region decidePropertyType
-                case MainWindow.turnStage.decidePropertyType:
+                case turnStage.decidePropertyType:
                     switch (MainWindow.propertyCard)
                     {
                         case Card.PropertyBlackGreen__4:
@@ -2934,56 +2934,56 @@ namespace MonopolyDealServer
                     return;
                 #endregion
 
-                case MainWindow.turnStage.checkPlayCard:
+                case turnStage.checkPlayCard:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.checkMoveCard:
+                case turnStage.checkMoveCard:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.discard:
+                case turnStage.discard:
                     return;
 
-                case MainWindow.turnStage.checkDiscard:
+                case turnStage.checkDiscard:
                     return;
 
-                case MainWindow.turnStage.house:
+                case turnStage.house:
                     MainWindow.propIndex = MainWindow.monopolyIndex2;
                     checkHouse();
                     return;
 
-                case MainWindow.turnStage.checkHouse:
+                case turnStage.checkHouse:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.hotel:
+                case turnStage.hotel:
                     MainWindow.propIndex = MainWindow.monopolyIndex2;
                     checkHotel();
                     return;
 
-                case MainWindow.turnStage.checkHotel:
+                case turnStage.checkHotel:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.debtCollect:
+                case turnStage.debtCollect:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.rentWild2:
+                case turnStage.rentWild2:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.doubleRentWild:
+                case turnStage.doubleRentWild:
                     playRentWild2();
                     return;
 
-                case MainWindow.turnStage.doubleRent:
+                case turnStage.doubleRent:
                     checkRent();
                     return;
 
                 #region rent
-                case MainWindow.turnStage.rent:
+                case turnStage.rent:
                     switch (MainWindow.rentCard)
                     {
                         case Card.RentBlackUtility__1:
@@ -3018,24 +3018,24 @@ namespace MonopolyDealServer
                     return;
                 #endregion
 
-                case MainWindow.turnStage.checkRent:
+                case turnStage.checkRent:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.birthday:
+                case turnStage.birthday:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.slyDeal:
+                case turnStage.slyDeal:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.forcedDeal2:
+                case turnStage.forcedDeal2:
                     decidePlayType();
                     return;
 
                 #region receiveForcedDeal
-                case MainWindow.turnStage.receiveForcedDeal:
+                case turnStage.receiveForcedDeal:
                     button1.Visibility = System.Windows.Visibility.Hidden;
                     button2.Visibility = System.Windows.Visibility.Hidden;
                     button3.Visibility = System.Windows.Visibility.Hidden;
@@ -3100,13 +3100,13 @@ namespace MonopolyDealServer
                     }
                 #endregion
 
-                case MainWindow.turnStage.dealBreaker:
+                case turnStage.dealBreaker:
                     MainWindow.propIndex = MainWindow.monopolyIndex2;
                     dealBreak();
                     return;
 
                 #region acknowledgeAttack
-                case MainWindow.turnStage.acknowledgeAttack1:
+                case turnStage.acknowledgeAttack1:
                     string stringPlayer = buttonPlayer.Content.ToString();
                     int player = (stringPlayer[7] - 49);
                     MainWindow.justSayNos++;
@@ -3168,17 +3168,17 @@ namespace MonopolyDealServer
         {
             switch (MainWindow.stage)
             {
-                case MainWindow.turnStage.begin:
+                case turnStage.begin:
                     return;
 
-                case MainWindow.turnStage.decidePlayType:
+                case turnStage.decidePlayType:
                     endTurn();
                     return;
 
-                case MainWindow.turnStage.playCardFromeHand:
+                case turnStage.playCardFromeHand:
                     return;
 
-                case MainWindow.turnStage.decideCardType:
+                case turnStage.decideCardType:
                     MainWindow.cardType = CardType.Property;
                     MainWindow.propertyCard = MainWindow.AllHands[MainWindow.playerNum][MainWindow.cardNum];
                     Card card = MainWindow.AllHands[MainWindow.playerNum][MainWindow.cardNum];
@@ -3196,19 +3196,19 @@ namespace MonopolyDealServer
                     }
                     return;
 
-                case MainWindow.turnStage.checkPlayCard:
+                case turnStage.checkPlayCard:
                     return;
 
-                case MainWindow.turnStage.discard:
+                case turnStage.discard:
                     return;
 
-                case MainWindow.turnStage.receiveForcedDeal:
+                case turnStage.receiveForcedDeal:
                     MainWindow.AllTableProperties[MainWindow.chosenPlayer][10].Add(Card.PropertyWild);
                     MainWindow.AllTableProperties[MainWindow.playerNum][MainWindow.propIndex].RemoveAt(MainWindow.cardNum);
                     finishPlayAction();
                     return;
 
-                case MainWindow.turnStage.acknowledgeAttack2:
+                case turnStage.acknowledgeAttack2:
                     string toDisplay = MainWindow.playerNames[MainWindow.chosenPlayer] + " paid the following cards to " + MainWindow.playerNames[MainWindow.playerNum] + ": ";
                     foreach (Card item in MainWindow.tableMoneySelectedItems)
                     {
@@ -3247,113 +3247,113 @@ namespace MonopolyDealServer
         {
             switch (MainWindow.stage)
             {
-                case MainWindow.turnStage.begin:
+                case turnStage.begin:
                     return;
 
-                case MainWindow.turnStage.decidePlayType:
+                case turnStage.decidePlayType:
                     return;
 
-                case MainWindow.turnStage.playCardFromeHand:
+                case turnStage.playCardFromeHand:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.decideCardType:
+                case turnStage.decideCardType:
                     playCardFromHand();
                     return;
 
-                case MainWindow.turnStage.decidePropertyType:
+                case turnStage.decidePropertyType:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.decidePropertyTypeWild:
+                case turnStage.decidePropertyTypeWild:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.moveCards:
+                case turnStage.moveCards:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.moveCardsDecideType:
+                case turnStage.moveCardsDecideType:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.moveCardsDecideTypeWild:
+                case turnStage.moveCardsDecideTypeWild:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.checkPlayCard:
+                case turnStage.checkPlayCard:
                     decideCardType();
                     return;
 
-                case MainWindow.turnStage.discard:
+                case turnStage.discard:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.checkDiscard:
+                case turnStage.checkDiscard:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.house:
+                case turnStage.house:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.checkHotel:
+                case turnStage.checkHotel:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.hotel:
+                case turnStage.hotel:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.checkHouse:
+                case turnStage.checkHouse:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.debtCollect:
+                case turnStage.debtCollect:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.rentWild:
+                case turnStage.rentWild:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.rentWild2:
+                case turnStage.rentWild2:
                     playRentWild();
                     return;
 
-                case MainWindow.turnStage.doubleRentWild:
+                case turnStage.doubleRentWild:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.doubleRent:
+                case turnStage.doubleRent:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.checkRent:
+                case turnStage.checkRent:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.rent:
+                case turnStage.rent:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.birthday:
+                case turnStage.birthday:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.slyDeal:
+                case turnStage.slyDeal:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.forcedDeal1:
+                case turnStage.forcedDeal1:
                     decidePlayType();
                     return;
 
-                case MainWindow.turnStage.forcedDeal2:
+                case turnStage.forcedDeal2:
                     playForcedDeal();
                     return;
 
-                case MainWindow.turnStage.dealBreaker:
+                case turnStage.dealBreaker:
                     decidePlayType();
                     return;
             }
@@ -3366,19 +3366,19 @@ namespace MonopolyDealServer
         //    {
         //        return;
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.playCardFromeHand)
+        //    if (MainWindow.stage == turnStage.playCardFromeHand)
         //    {
         //        MainWindow.cardNum = Hand.SelectedIndex;
         //        decideCardType();
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.discard)
+        //    if (MainWindow.stage == turnStage.discard)
         //    {
         //        MainWindow.cardNum = Hand.SelectedIndex;
         //        checkDiscard();
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.slyDeal)
+        //    if (MainWindow.stage == turnStage.slyDeal)
         //    {
         //        if (MainWindow.chosenPlayer != MainWindow.playerNum)
         //        {
@@ -3390,7 +3390,7 @@ namespace MonopolyDealServer
 
         //public void buttonPlayer_Click(object sender, RoutedEventArgs e)
         //{
-        //    if (MainWindow.stage == MainWindow.turnStage.debtCollect)
+        //    if (MainWindow.stage == turnStage.debtCollect)
         //    {
         //        string chosenPlayer = buttonPlayer.Content.ToString();
         //        MainWindow.chosenPlayer = (chosenPlayer[7] - 49);
@@ -3399,7 +3399,7 @@ namespace MonopolyDealServer
         //            MainWindow.playerTurns[MainWindow.playerNum].checkDebtCollector();
         //        }
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.rentWild2)
+        //    if (MainWindow.stage == turnStage.rentWild2)
         //    {
         //        string chosenPlayer = buttonPlayer.Content.ToString();
         //        MainWindow.chosenPlayer = (chosenPlayer[7] - 49);
@@ -3408,7 +3408,7 @@ namespace MonopolyDealServer
         //            MainWindow.playerTurns[MainWindow.playerNum].checkRentWild();
         //        }
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.dealBreaker)
+        //    if (MainWindow.stage == turnStage.dealBreaker)
         //    {
         //        string chosenPlayer = buttonPlayer.Content.ToString();
         //        MainWindow.chosenPlayer = (chosenPlayer[7] - 49);
@@ -3421,7 +3421,7 @@ namespace MonopolyDealServer
 
         //public void Table_Properties_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
-        //    if (MainWindow.stage == MainWindow.turnStage.acknowledgeAttack)
+        //    if (MainWindow.stage == turnStage.acknowledgeAttack)
         //    {
         //        int totalValue = 0;
         //        int numOfWilds = 0;
@@ -3462,7 +3462,7 @@ namespace MonopolyDealServer
 
         //public void Table_Money_SelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
-        //    if (MainWindow.stage == MainWindow.turnStage.acknowledgeAttack)
+        //    if (MainWindow.stage == turnStage.acknowledgeAttack)
         //    {
         //        int totalValue = 0;
         //        int numOfWilds = 0;
@@ -3506,7 +3506,7 @@ namespace MonopolyDealServer
         //    {
         //        return;
         //    }
-        //    //if (MainWindow.stage == MainWindow.turnStage.slyDeal)
+        //    //if (MainWindow.stage == turnStage.slyDeal)
         //    //{
         //    //    MainWindow.cardNum = Table_Properties.SelectedIndex;
         //    //    MainWindow.propertyCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -3520,7 +3520,7 @@ namespace MonopolyDealServer
         //    //    }
         //    //}
 
-        //    if (MainWindow.stage == MainWindow.turnStage.forcedDeal1)
+        //    if (MainWindow.stage == turnStage.forcedDeal1)
         //    {
         //        MainWindow.cardNum = Table_Properties.SelectedIndex;
         //        Card currentCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -3528,7 +3528,7 @@ namespace MonopolyDealServer
         //        MainWindow.cardNum = MainWindow.AllTableProperties[MainWindow.playerNum][MainWindow.propIndex].IndexOf(currentCard);
         //        MainWindow.playerTurns[MainWindow.playerNum].playForcedDeal2();
         //    }
-        //    //else if (MainWindow.stage == MainWindow.turnStage.forcedDeal2)
+        //    //else if (MainWindow.stage == turnStage.forcedDeal2)
         //    //{
         //    //    MainWindow.cardNum2 = Table_Properties.SelectedIndex;
         //    //    MainWindow.propertyCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
@@ -3539,7 +3539,7 @@ namespace MonopolyDealServer
         //    //    MainWindow.playerTurns[MainWindow.playerNum].checkForcedDeal();
         //    //}
 
-        //    if (MainWindow.stage == MainWindow.turnStage.rentWild)
+        //    if (MainWindow.stage == turnStage.rentWild)
         //    {
         //        MainWindow.cardNum = Table_Properties.SelectedIndex;
         //        Card currentCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -3556,7 +3556,7 @@ namespace MonopolyDealServer
         //        }
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.decidePropertyTypeWild)
+        //    if (MainWindow.stage == turnStage.decidePropertyTypeWild)
         //    {
         //        MainWindow.cardNum2 = Table_Properties.SelectedIndex;
         //        MainWindow.propertyCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
@@ -3564,7 +3564,7 @@ namespace MonopolyDealServer
         //        checkPlayCard();
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.moveCards)
+        //    if (MainWindow.stage == turnStage.moveCards)
         //    {
         //        MainWindow.cardNum = Table_Properties.SelectedIndex;
         //        MainWindow.propertyCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -3598,7 +3598,7 @@ namespace MonopolyDealServer
         //        }
         //        return;
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.moveCardsDecideTypeWild)
+        //    if (MainWindow.stage == turnStage.moveCardsDecideTypeWild)
         //    {
         //        MainWindow.cardNum2 = Table_Properties.SelectedIndex;
         //        Card currentCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);

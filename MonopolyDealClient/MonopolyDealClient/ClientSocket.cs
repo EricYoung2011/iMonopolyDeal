@@ -148,13 +148,17 @@ namespace SocketDLL
         /// <param name="receivedData"></param>
         public byte[] receiveData(Socket serverSocket)
         {
-            byte[] buffer = new byte[2000];
+            byte[] buffer = new byte[100000];
             byte[] example = new byte[1];
             int iResult = 0;
             try
             {
                 //iResult = serverSocket.Receive(buffer);
                 iResult = client.Receive(buffer);
+                //if (buffer[1900] != 0)
+                //{
+                //    int stop = 1;
+                //}
                 int stillSorting = 0;
                 while (stillSorting >= 0)
                 {

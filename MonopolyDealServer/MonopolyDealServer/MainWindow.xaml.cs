@@ -25,6 +25,42 @@ using Newtonsoft.Json;
 namespace MonopolyDealServer
 {
 
+    public enum turnStage
+    {
+        begin,
+        ready,
+        decidePlayType,
+        moveCards,
+        moveCardsDecideType,
+        moveCardsDecideTypeWild,
+        checkMoveCard,
+        playCardFromeHand,
+        decideCardType,
+        decidePropertyType,
+        decidePropertyTypeWild,
+        checkPlayCard,
+        discard,
+        checkDiscard,
+        house,
+        checkHouse,
+        hotel,
+        checkHotel,
+        debtCollect,
+        birthday,
+        forcedDeal1,
+        forcedDeal2,
+        receiveForcedDeal,
+        slyDeal,
+        dealBreaker,
+        rentWild,
+        rentWild2,
+        rent,
+        doubleRent,
+        doubleRentWild,
+        checkRent,
+        acknowledgeAttack1,
+        acknowledgeAttack2,
+    }
     #region Deck Definitions
     public enum Card
     {
@@ -178,42 +214,6 @@ namespace MonopolyDealServer
         public static List<int> messageNum = new List<int>();
         public static gameState currGameState;
         DateTime lastSend;
-        public enum turnStage
-        {
-            begin,
-            ready,
-            decidePlayType,
-            moveCards,
-            moveCardsDecideType,
-            moveCardsDecideTypeWild,
-            checkMoveCard,
-            playCardFromeHand,
-            decideCardType,
-            decidePropertyType,
-            decidePropertyTypeWild,
-            checkPlayCard,
-            discard,
-            checkDiscard,
-            house,
-            checkHouse,
-            hotel,
-            checkHotel,
-            debtCollect,
-            birthday,
-            forcedDeal1,
-            forcedDeal2,
-            receiveForcedDeal,
-            slyDeal,
-            dealBreaker,
-            rentWild,
-            rentWild2,
-            rent,
-            doubleRent,
-            doubleRentWild,
-            checkRent,
-            acknowledgeAttack1,
-            acknowledgeAttack2,
-        }
         public static List<playerTurn> playerTurns = new List<playerTurn>();
         public static clientEvent currClientEvent;
         //public static gameState currGameState;
@@ -428,7 +428,7 @@ namespace MonopolyDealServer
             else //no new message received
             {
                 TimeSpan duration = DateTime.Now - lastSend;
-                if (duration.Milliseconds > 1000)
+                if (duration.Milliseconds > 5000)
                 {
                     resendGameStates();
                     lastSend = DateTime.Now;
@@ -1752,7 +1752,7 @@ namespace MonopolyDealServer
                 {
                     return;
                 }
-                if (MainWindow.stage == MainWindow.turnStage.forcedDeal1)
+                if (MainWindow.stage == turnStage.forcedDeal1)
                 {
                     MainWindow.cardNum = tablePropertiesSelectedIndex;
                     Card currentCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -1760,7 +1760,7 @@ namespace MonopolyDealServer
                     MainWindow.cardNum = MainWindow.AllTableProperties[MainWindow.playerNum][MainWindow.propIndex].IndexOf(currentCard);
                     MainWindow.playerTurns[MainWindow.playerNum].playForcedDeal2();
                 }
-                if (MainWindow.stage == MainWindow.turnStage.rentWild)
+                if (MainWindow.stage == turnStage.rentWild)
                 {
                     MainWindow.cardNum = tablePropertiesSelectedIndex;
                     Card currentCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -1777,7 +1777,7 @@ namespace MonopolyDealServer
                     }
                 }
 
-                if (MainWindow.stage == MainWindow.turnStage.decidePropertyTypeWild)
+                if (MainWindow.stage == turnStage.decidePropertyTypeWild)
                 {
                     MainWindow.cardNum2 = tablePropertiesSelectedIndex;
                     MainWindow.propertyCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
@@ -1785,7 +1785,7 @@ namespace MonopolyDealServer
                     MainWindow.playerTurns[MainWindow.playerNum].checkPlayCard();
                 }
 
-                if (MainWindow.stage == MainWindow.turnStage.moveCards)
+                if (MainWindow.stage == turnStage.moveCards)
                 {
                     MainWindow.cardNum = tablePropertiesSelectedIndex;
                     MainWindow.propertyCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -1819,7 +1819,7 @@ namespace MonopolyDealServer
                     }
                     return;
                 }
-                if (MainWindow.stage == MainWindow.turnStage.moveCardsDecideTypeWild)
+                if (MainWindow.stage == turnStage.moveCardsDecideTypeWild)
                 {
                     MainWindow.cardNum2 = tablePropertiesSelectedIndex;
                     Card currentCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
@@ -1827,7 +1827,7 @@ namespace MonopolyDealServer
                     MainWindow.playerTurns[MainWindow.playerNum].checkMoveCard();
                 }
             }
-            if (MainWindow.stage == MainWindow.turnStage.acknowledgeAttack2)
+            if (MainWindow.stage == turnStage.acknowledgeAttack2)
             {
                 int totalValue = 0;
                 int numOfWilds = 0;
@@ -1868,7 +1868,7 @@ namespace MonopolyDealServer
 
         public static void Table_Money_SelectionChanged()
         {
-            if (MainWindow.stage == MainWindow.turnStage.acknowledgeAttack2)
+            if (MainWindow.stage == turnStage.acknowledgeAttack2)
             {
                 int totalValue = 0;
                 int numOfWilds = 0;
@@ -1912,7 +1912,7 @@ namespace MonopolyDealServer
         //    {
         //        return;
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.forcedDeal1)
+        //    if (MainWindow.stage == turnStage.forcedDeal1)
         //    {
         //        MainWindow.cardNum = tablePropertiesSelectedIndex;
         //        Card currentCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -1920,7 +1920,7 @@ namespace MonopolyDealServer
         //        MainWindow.cardNum = MainWindow.AllTableProperties[MainWindow.playerNum][MainWindow.propIndex].IndexOf(currentCard);
         //        MainWindow.playerTurns[MainWindow.playerNum].playForcedDeal2();
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.rentWild)
+        //    if (MainWindow.stage == turnStage.rentWild)
         //    {
         //        MainWindow.cardNum = tablePropertiesSelectedIndex;
         //        Card currentCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -1937,7 +1937,7 @@ namespace MonopolyDealServer
         //        }
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.decidePropertyTypeWild)
+        //    if (MainWindow.stage == turnStage.decidePropertyTypeWild)
         //    {
         //        MainWindow.cardNum2 = tablePropertiesSelectedIndex;
         //        MainWindow.propertyCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
@@ -1945,7 +1945,7 @@ namespace MonopolyDealServer
         //        MainWindow.playerTurns[MainWindow.playerNum].checkPlayCard();
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.moveCards)
+        //    if (MainWindow.stage == turnStage.moveCards)
         //    {
         //        MainWindow.cardNum = tablePropertiesSelectedIndex;
         //        MainWindow.propertyCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -1979,14 +1979,14 @@ namespace MonopolyDealServer
         //        }
         //        return;
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.moveCardsDecideTypeWild)
+        //    if (MainWindow.stage == turnStage.moveCardsDecideTypeWild)
         //    {
         //        MainWindow.cardNum2 = tablePropertiesSelectedIndex;
         //        Card currentCard = MainWindow.playerTurns[MainWindow.playerNum].Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
         //        MainWindow.propIndex2 = MainWindow.getPropertyIndex(currentCard);
         //        MainWindow.playerTurns[MainWindow.playerNum].checkMoveCard();
         //    }
-        //    //if (MainWindow.stage == MainWindow.turnStage.slyDeal)
+        //    //if (MainWindow.stage == turnStage.slyDeal)
         //    //{
         //    //    MainWindow.cardNum = Table_Properties.SelectedIndex;
         //    //    MainWindow.propertyCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -2001,7 +2001,7 @@ namespace MonopolyDealServer
         //    //}
 
             
-        //    //else if (MainWindow.stage == MainWindow.turnStage.forcedDeal2)
+        //    //else if (MainWindow.stage == turnStage.forcedDeal2)
         //    //{
         //    //    MainWindow.cardNum2 = Table_Properties.SelectedIndex;
         //    //    MainWindow.propertyCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
@@ -2021,19 +2021,19 @@ namespace MonopolyDealServer
         //    {
         //        return;
         //    }
-        //    if (MainWindow.stage == MainWindow.turnStage.playCardFromeHand)
+        //    if (MainWindow.stage == turnStage.playCardFromeHand)
         //    {
         //        MainWindow.cardNum = MainWindow.playerTurns[MainWindow.playerNum].Hand.SelectedIndex;
         //        MainWindow.playerTurns[MainWindow.playerNum].decideCardType();
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.discard)
+        //    if (MainWindow.stage == turnStage.discard)
         //    {
         //        MainWindow.cardNum = MainWindow.playerTurns[MainWindow.playerNum].Hand.SelectedIndex;
         //        MainWindow.playerTurns[MainWindow.playerNum].checkDiscard();
         //    }
 
-        //    if (MainWindow.stage == MainWindow.turnStage.slyDeal)
+        //    if (MainWindow.stage == turnStage.slyDeal)
         //    {
         //        if (MainWindow.chosenPlayer != MainWindow.playerNum)
         //        {
@@ -2053,19 +2053,19 @@ namespace MonopolyDealServer
             {
                 return;
             }
-            if (MainWindow.stage == MainWindow.turnStage.playCardFromeHand)
+            if (MainWindow.stage == turnStage.playCardFromeHand)
             {
                 MainWindow.cardNum = handSelectedIndex;
                 MainWindow.playerTurns[MainWindow.playerNum].decideCardType();
             }
 
-            if (MainWindow.stage == MainWindow.turnStage.discard)
+            if (MainWindow.stage == turnStage.discard)
             {
                 MainWindow.cardNum = handSelectedIndex;
                 MainWindow.playerTurns[MainWindow.playerNum].checkDiscard();
             }
 
-            if (MainWindow.stage == MainWindow.turnStage.slyDeal)
+            if (MainWindow.stage == turnStage.slyDeal)
             {
                 if (MainWindow.chosenPlayer != MainWindow.playerNum)
                 {
@@ -2080,7 +2080,7 @@ namespace MonopolyDealServer
             //Button copySender = (Button)sender;
             //int playerClicked = MainWindow.otherNames[MainWindow.playerNum].IndexOf(copySender);
 
-            if (MainWindow.stage == MainWindow.turnStage.debtCollect)
+            if (MainWindow.stage == turnStage.debtCollect)
             {
                 MainWindow.chosenPlayer = playerClicked;
                 if (MainWindow.chosenPlayer != MainWindow.playerNum)
@@ -2088,7 +2088,7 @@ namespace MonopolyDealServer
                     MainWindow.playerTurns[MainWindow.playerNum].checkDebtCollector();
                 }
             }
-            if (MainWindow.stage == MainWindow.turnStage.rentWild2)
+            if (MainWindow.stage == turnStage.rentWild2)
             {
                 MainWindow.chosenPlayer = playerClicked;
                 if (MainWindow.chosenPlayer != MainWindow.playerNum)
@@ -2096,7 +2096,7 @@ namespace MonopolyDealServer
                     MainWindow.playerTurns[MainWindow.playerNum].checkRentWild();
                 }
             }
-            if (MainWindow.stage == MainWindow.turnStage.dealBreaker)
+            if (MainWindow.stage == turnStage.dealBreaker)
             {
                 MainWindow.chosenPlayer = playerClicked;
                 if (MainWindow.chosenPlayer != MainWindow.playerNum)
@@ -2116,7 +2116,7 @@ namespace MonopolyDealServer
             {
                 return;
             }
-            if (MainWindow.stage == MainWindow.turnStage.slyDeal)
+            if (MainWindow.stage == turnStage.slyDeal)
             {
                 MainWindow.cardNum = otherPropertiesSelectedIndex;
                 MainWindow.propertyCard = MainWindow.otherTable_Properties[MainWindow.playerNum][playerClicked].Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -2130,7 +2130,7 @@ namespace MonopolyDealServer
                 }
             }
 
-            //if (MainWindow.stage == MainWindow.turnStage.forcedDeal1)
+            //if (MainWindow.stage == turnStage.forcedDeal1)
             //{
             //    MainWindow.cardNum = Table_Properties.SelectedIndex;
             //    Card currentCard = Table_Properties.Items.Cast<Card>().ElementAt(MainWindow.cardNum);
@@ -2138,7 +2138,7 @@ namespace MonopolyDealServer
             //    MainWindow.cardNum = MainWindow.AllTableProperties[MainWindow.playerNum][MainWindow.propIndex].IndexOf(currentCard);
             //    MainWindow.playerTurns[MainWindow.playerNum].playForcedDeal2();
             //}
-            else if (MainWindow.stage == MainWindow.turnStage.forcedDeal2)
+            else if (MainWindow.stage == turnStage.forcedDeal2)
             {
                 MainWindow.cardNum2 = otherPropertiesSelectedIndex;
                 MainWindow.propertyCard = MainWindow.otherTable_Properties[MainWindow.playerNum][playerClicked].Items.Cast<Card>().ElementAt(MainWindow.cardNum2);
